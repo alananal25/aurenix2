@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>Lumira Company</title>
+    <link href="https://fonts.googleapis.com/css?family=Inter:400,700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Inter', sans-serif;
+            background: #f8fafc;
+            color: #1e293b;
+        }
+        header {
+            background: #fff;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+            padding: 24px 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .logo {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+        }
+        .logo svg {
+            height: 40px;
+            width: 40px;
+            color: #2563eb;
+        }
+        .logo span {
+            margin-left: 12px;
+            font-size: 2rem;
+            font-weight: bold;
+            color: #2563eb;
+            letter-spacing: 2px;
+        }
+        nav {
+            margin-left: 48px;
+        }
+        nav a {
+            color: #1e293b;
+            text-decoration: none;
+            margin: 0 18px;
+            font-weight: 500;
+            font-size: 1.1rem;
+            transition: color 0.2s;
+        }
+        nav a:hover {
+            color: #2563eb;
+        }
+        section {
+            max-width: 1100px;
+            margin: 64px auto;
+            background: #fff;
+            border-radius: 18px;
+            box-shadow: 0 6px 32px rgba(37,99,235,0.07);
+            display: flex;
+            align-items: center;
+            padding: 48px;
+            gap: 48px;
+            opacity: 0;
+            transform: translateY(40px);
+            animation: fadeInUp 1s forwards;
+        }
+        section:nth-child(2) { animation-delay: 0.1s; }
+        section:nth-child(3) { animation-delay: 0.2s; }
+        section:nth-child(4) { animation-delay: 0.3s; }
+        section:nth-child(5) { animation-delay: 0.4s; }
+        section:nth-child(6) { animation-delay: 0.5s; }
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: none;
+            }
+        }
+        .section-content {
+            flex: 1;
+        }
+        .section-title {
+            font-size: 2.2rem;
+            color: #2563eb;
+            margin-bottom: 18px;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+        .section-desc {
+            font-size: 1.15rem;
+            color: #334155;
+            margin-bottom: 18px;
+            line-height: 1.7;
+        }
+        .learn-more-btn {
+            display: inline-block;
+            padding: 10px 22px;
+            background: #2563eb;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+            margin-bottom: 10px;
+        }
+        .learn-more-btn:hover {
+            background: #1e40af;
+        }
+        .about-extra {
+            max-height: 0;
+            overflow: hidden;
+            opacity: 0;
+            transition: max-height 0.5s cubic-bezier(.4,2,.6,1), opacity 0.4s;
+            font-size: 1.05rem;
+            color: #475569;
+            margin-top: 0;
+        }
+        .about-extra.expanded {
+            max-height: 400px;
+            opacity: 1;
+            margin-top: 12px;
+        }
+        .section-img {
+            flex: 1;
+            min-width: 260px;
+            max-width: 380px;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 4px 24px rgba(37,99,235,0.10);
+            transition: transform 0.4s cubic-bezier(.4,2,.6,1);
+        }
+        .section-img img {
+            width: 100%;
+            display: block;
+            border-radius: 16px;
+            transition: transform 0.4s cubic-bezier(.4,2,.6,1);
+        }
+        .section-img:hover img {
+            transform: scale(1.04) rotate(-1deg);
+        }
+        @media (max-width: 900px) {
+            section {
+                flex-direction: column;
+                padding: 32px 16px;
+                gap: 24px;
+            }
+            .section-img, .section-content {
+                max-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <a href="index.html" class="logo">
+            <svg viewBox="0 0 24 24" fill="none">
+                <path d="M12 2L3 7L12 12L21 7L12 2Z" fill="currentColor"/>
+                <path d="M3 12L12 17L21 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                <path d="M3 17L12 22L21 17" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+            <span>Lumira</span>
+        </a>
+        <nav>
+            <a href="#about">About</a>
+            <a href="#blog">Blog</a>
+            <a href="#careers">Careers</a>
+            <a href="#press">Press</a>
+            <a href="#privacy">Privacy</a>
+        </nav>
+    </header>
+
+    <section id="about">
+        <div class="section-content">
+            <div class="section-title">About Us</div>
+            <div class="section-desc">
+                Lumira is dedicated to building innovative digital solutions that empower businesses worldwide. Our team combines expertise, creativity, and technology to deliver exceptional results for our clients.
+            </div>
+            <button class="learn-more-btn" onclick="toggleAboutExtra()">Learn More</button>
+            <div class="about-extra" id="aboutExtra">
+                <p>
+                    Founded in 2018, Lumira has grown into a trusted partner for organizations seeking to transform their digital presence. Our multidisciplinary team specializes in software development, UX/UI design, and strategic consulting. We believe in a collaborative approach, working closely with clients to understand their unique challenges and deliver tailored solutions.<br><br>
+                    Our commitment to quality and innovation has earned us recognition in various industries, from finance and healthcare to retail and education. At Lumira, we are passionate about leveraging technology to create meaningful impact and drive sustainable growth for our partners.
+                </p>
+            </div>
+        </div>
+        <div class="section-img">
+            <img src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=600&q=80" alt="About Lumira">
+        </div>
+    </section>
+
+    <section id="blog">
+        <div class="section-img">
+            <img src="https://images.unsplash.com/photo-1461749280684-dccba630e2f6?auto=format&fit=crop&w=600&q=80" alt="Blog">
+        </div>
+        <div class="section-content">
+            <div class="section-title">Blog</div>
+            <div class="section-desc">
+                Explore insights, trends, and stories from our experts. Stay updated with the latest in technology, design, and business through our regularly updated blog.
+            </div>
+        </div>
+    </section>
+
+    <section id="careers">
+        <div class="section-content">
+            <div class="section-title">Careers</div>
+            <div class="section-desc">
+                Join a passionate team that values growth, collaboration, and innovation. Discover exciting opportunities to build your career at Lumira.
+            </div>
+        </div>
+        <div class="section-img">
+            <img src="https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=600&q=80" alt="Careers">
+        </div>
+    </section>
+
+    <section id="press">
+        <div class="section-img">
+            <img src="https://images.unsplash.com/photo-1515378791036-0648a3ef77b2?auto=format&fit=crop&w=600&q=80" alt="Press">
+        </div>
+        <div class="section-content">
+            <div class="section-title">Press</div>
+            <div class="section-desc">
+                Read about Lumira in the news. Find our latest press releases, media coverage, and resources for journalists and partners.
+            </div>
+        </div>
+    </section>
+
+    <section id="privacy">
+        <div class="section-content">
+            <div class="section-title">Privacy</div>
+            <div class="section-desc">
+                Your privacy matters to us. Learn how we protect your data and respect your rights in our transparent privacy policy.
+            </div>
+        </div>
+        <div class="section-img">
+            <img src="https://images.unsplash.com/photo-1503676382389-4809596d5290?auto=format&fit=crop&w=600&q=80" alt="Privacy">
+        </div>
+    </section>
+    <script>
+        function toggleAboutExtra() {
+            const extra = document.getElementById('aboutExtra');
+            const btn = document.querySelector('.learn-more-btn');
+            extra.classList.toggle('expanded');
+            btn.textContent = extra.classList.contains('expanded') ? 'Show Less' : 'Learn More';
+        }
+    </script>
+</body>
+</html>
