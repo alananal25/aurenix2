@@ -1,0 +1,1218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Account Access</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Profile dropdown styles */
+        .profile-dropdown {
+            position: relative;
+            display: inline-block;
+        }
+        
+        .profile-dropdown-content {
+            display: none;
+            position: absolute;
+            right: 0;
+            min-width: 200px;
+            background-color: white;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+            border-radius: 8px;
+            z-index: 100;
+            overflow: hidden;
+        }
+        
+        .profile-dropdown:hover .profile-dropdown-content {
+            display: block;
+        }
+        
+        .profile-dropdown-content a {
+            color: #4a5568;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+            transition: background-color 0.2s;
+        }
+        
+        .profile-dropdown-content a:hover {
+            background-color: #f7fafc;
+        }
+        
+        .profile-dropdown-content i {
+            margin-right: 8px;
+            width: 20px;
+            text-align: center;
+        }
+        
+        /* Efecto de gradiente animado para el fondo */
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        .gradient-bg {
+            background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+        }
+        
+        /* Efecto de elevación al hacer hover en las tarjetas */
+        .user-card {
+            transition: all 0.3s ease;
+        }
+        
+        .user-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        
+        /* Animación de entrada suave */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .animate-fade-in {
+            animation: fadeIn 0.6s ease-out forwards;
+        }
+        
+        /* Notificación */
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        
+        .notification {
+            animation: slideIn 0.3s ease-out forwards;
+        }
+        
+        /* Retraso para las animaciones */
+        .delay-100 { animation-delay: 0.1s; opacity: 0; }
+        .delay-200 { animation-delay: 0.2s; opacity: 0; }
+        .delay-300 { animation-delay: 0.3s; opacity: 0; }
+    </style>
+</head>
+<body class="gradient-bg min-h-screen flex items-center justify-center p-4 relative">
+    <div class="w-full max-w-4xl bg-white rounded-2xl shadow-2xl overflow-hidden animate-fade-in">
+        <div class="md:flex">
+            <!-- Sección de imagen -->
+            <div class="md:w-1/2 bg-blue-600 hidden md:flex items-center justify-center p-12">
+                <div class="text-center text-white">
+                    <i class="fas fa-user-lock text-6xl mb-6"></i>
+                    <h2 class="text-3xl font-bold mb-4">Welcome back!</h2>
+                    <p class="opacity-80">Access your account to discover all the features we have for you.</p>
+                </div>
+            </div>
+            
+            <!-- Sección de formulario -->
+            <div class="w-full md:w-1/2 p-10">
+                <div class="text-center mb-8">
+                    <h1 class="text-3xl font-bold text-gray-800 mb-2">Access your account</h1>
+                    <p class="text-gray-600">Or create a new one if you're new here</p>
+                </div>
+                
+                <!-- Tabs de login/registro -->
+                <div class="flex border-b border-gray-200 mb-6">
+                    <button id="login-tab" class="flex-1 py-2 px-4 text-center text-blue-600 font-medium border-b-2 border-blue-600 focus:outline-none">
+                        Login
+                    </button>
+                    <button id="register-tab" class="flex-1 py-2 px-4 text-center text-gray-500 font-medium focus:outline-none">
+                        Register
+                    </button>
+                </div>
+                
+                <!-- Contenido del login -->
+                <div id="login-content" class="space-y-6">
+                    <div>
+                        <label for="login-email" class="block text-sm font-medium text-gray-700 mb-1">Email address</label>
+                        <input type="email" id="login-email" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition duration-200" placeholder="your@email.com">
+                    </div>
+                    
+                    <div>
+                        <label for="login-password" class="block text-sm font-medium text-gray-700 mb-1">Password</label>
+                        <input type="password" id="login-password" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition duration-200" placeholder="••••••••">
+                    </div>
+                    
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center">
+                            <input type="checkbox" id="remember-me" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
+                            <label for="remember-me" class="ml-2 block text-sm text-gray-700">Remember me</label>
+                        </div>
+                        <a href="#" class="text-sm text-blue-600 hover:text-blue-500">Forgot password?</a>
+                    </div>
+                    
+                    <button id="sign-in-button" type="button" class="w-full bg-blue-600 text-white py-3 px-4 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition duration-200">
+                        Sign In
+                    </button>
+                </div>
+                
+                <!-- Contenido del registro -->
+                <div id="register-content" class="space-y-6 hidden">
+                    <div id="user-type-selector" class="mb-6 delay-100">
+                        <p class="block text-sm font-medium text-gray-700 mb-3">Select your account type</p>
+                        <div class="grid grid-cols-2 gap-4">
+                            <button id="client-btn" class="user-card bg-white border-2 border-blue-200 rounded-lg p-4 text-center cursor-pointer hover:border-blue-500 transition duration-200 delay-200">
+                                <i class="fas fa-user text-4xl text-blue-500 mb-2"></i>
+                                <h3 class="font-medium text-gray-800">I'm a Customer</h3>
+                                <p class="text-sm text-gray-500 mt-1">Looking for products/services</p>
+                            </button>
+                            <button id="business-btn" class="user-card bg-white border-2 border-gray-200 rounded-lg p-4 text-center cursor-pointer hover:border-blue-500 transition duration-200 delay-300">
+                                <i class="fas fa-building text-4xl text-blue-500 mb-2"></i>
+                                <h3 class="font-medium text-gray-800">I'm a Business</h3>
+                                <p class="text-sm text-gray-500 mt-1">Investing or looking for products/services</p>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Formulario de registro (inicialmente oculto) -->
+                    <div id="register-form" class="hidden">
+                        <input type="hidden" id="user-type" value="">
+                        
+                        <div>
+                            <label id="register-name-label" for="register-name" class="block text-sm font-medium text-gray-700 mb-1">Full name</label>
+                            <input type="text" id="register-name" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition duration-200" placeholder="Your name">
+                        </div>
+                        
+                        <div class="mt-4">
+                            <label for="register-email" class="block text-sm font-medium text-gray-700 mb-1">Email address</label>
+                            <input type="email" id="register-email" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition duration-200" placeholder="your@email.com">
+                        </div>
+                        
+                        <div class="mt-4">
+                            <label for="register-password" class="block text-sm font-medium text-gray-700 mb-1">Password</label>
+                            <input type="password" id="register-password" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition duration-200" placeholder="••••••••">
+                        </div>
+                        <div class="mt-4">
+                            <label for="register-confirm-password" class="block text-sm font-medium text-gray-700 mb-1">Confirm password</label>
+                            <input type="password" id="register-confirm-password" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition duration-200" placeholder="••••••••">
+                        </div>
+                        
+                        <div class="mt-4">
+                            <div class="flex items-center">
+                                <input type="checkbox" id="accept-terms" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
+                                <label for="accept-terms" class="ml-2 block text-sm text-gray-700">
+                                    I accept the <a href="#" class="text-blue-600 hover:text-blue-500">Terms and Conditions</a>
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <button type="button" class="w-full mt-6 bg-blue-600 text-white py-3 px-4 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition duration-200">
+                            Registrarse
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="mt-6 text-center">
+                    <p class="text-sm text-gray-600">Or continue with</p>
+                    <div class="flex justify-center space-x-4 mt-4">
+                        <button id="google-login" class="p-2 rounded-full bg-gray-100 hover:bg-gray-200 transition duration-200">
+                            <i class="fab fa-google text-red-600"></i>
+                        </button>
+                        <button id="facebook-login" class="p-2 rounded-full bg-gray-100 hover:bg-gray-200 transition duration-200">
+                            <i class="fab fa-facebook-f text-blue-600"></i>
+                        </button>
+                        <button id="twitter-login" class="p-2 rounded-full bg-gray-100 hover:bg-gray-200 transition duration-200">
+                            <i class="fab fa-twitter text-blue-400"></i>
+                        </button>
+                        <button id="apple-login" class="p-2 rounded-full bg-gray-100 hover:bg-gray-200 transition duration-200">
+                            <i class="fab fa-apple text-gray-800"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Social Login Modals -->
+    <!-- Google Login Modal -->
+    <div id="google-login-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50 p-4">
+        <div class="bg-white rounded-2xl shadow-xl max-w-md w-full animate-fade-in">
+            <div class="p-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-2xl font-bold text-gray-800">Sign in with Google</h3>
+                    <button id="close-google-modal" class="text-gray-400 hover:text-gray-500">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                
+                <p class="text-gray-600 mb-6">Enter your Google credentials to continue</p>
+                
+                <div class="space-y-4">
+                    <div>
+                        <label for="google-email" class="block text-sm font-medium text-gray-700 mb-1">Google ID (Email)</label>
+                        <input type="email" id="google-email" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition duration-200" placeholder="your@email.com">
+                    </div>
+                    
+                    <div>
+                        <label for="google-password" class="block text-sm font-medium text-gray-700 mb-1">Password</label>
+                        <input type="password" id="google-password" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition duration-200" placeholder="••••••••">
+                    </div>
+                    
+                    <button id="complete-google-login" class="w-full bg-red-600 text-white py-3 px-4 rounded-lg hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition duration-200">
+                        Continue with Google
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Google Login Modal logic for notification and redirect
+        document.getElementById('complete-google-login').addEventListener('click', function () {
+            const email = document.getElementById('google-email').value;
+            const password = document.getElementById('google-password').value;
+            if (!email || !password) {
+                // Do nothing if either field is empty
+                return;
+            }
+            // Show notification
+            const notification = document.createElement('div');
+            notification.className = 'fixed top-4 right-4 bg-white p-4 rounded-lg shadow-lg border-l-4 border-green-500 z-50 animate-fade-in';
+            notification.innerHTML = `
+                <div class="flex items-center">
+                    <i class="fas fa-check-circle text-green-500 text-xl mr-2"></i>
+                    <div>
+                        <p class="font-medium">Login successful</p>
+                        <p class="text-sm text-gray-600">Welcome, ${email}</p>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(notification);
+            // Save login state
+            sessionStorage.setItem('isLoggedIn', 'true');
+            sessionStorage.setItem('userEmail', email);
+            // Redirect after 2 seconds
+            setTimeout(() => {
+                notification.classList.add('opacity-0', 'transition-opacity', 'duration-300');
+                setTimeout(() => notification.remove(), 300);
+                window.location.href = 'index.html';
+            }, 2000);
+            // Hide modal and clear fields
+            document.getElementById('google-login-modal').classList.add('hidden');
+            document.getElementById('google-email').value = '';
+            document.getElementById('google-password').value = '';
+        });
+    </script>
+   
+
+    <!-- Facebook Login Modal -->
+    <div id="facebook-login-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50 p-4">
+        <div class="bg-white rounded-2xl shadow-xl max-w-md w-full animate-fade-in">
+            <div class="p-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-2xl font-bold text-gray-800">Sign in with Facebook</h3>
+                    <button id="close-facebook-modal" class="text-gray-400 hover:text-gray-500">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                
+                <p class="text-gray-600 mb-6">Enter your Facebook credentials to continue</p>
+                
+                <div class="space-y-4">
+                    <div>
+                        <label for="facebook-email" class="block text-sm font-medium text-gray-700 mb-1">Facebook ID (Email)</label>
+                        <input type="email" id="facebook-email" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition duration-200" placeholder="your@email.com">
+                    </div>
+                    
+                    <div>
+                        <label for="facebook-password" class="block text-sm font-medium text-gray-700 mb-1">Password</label>
+                        <input type="password" id="facebook-password" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition duration-200" placeholder="••••••••">
+                    </div>
+                    
+                    <button id="complete-facebook-login" class="w-full bg-blue-700 text-white py-3 px-4 rounded-lg hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition duration-200">
+                        Continue with Facebook
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+    // Facebook login notification logic
+    function showFacebookNotification(success, email) {
+        // Remove any existing notification
+        const old = document.getElementById('facebook-login-notification');
+        if (old) old.remove();
+        const notification = document.createElement('div');
+        notification.id = 'facebook-login-notification';
+        notification.className = 'fixed top-4 right-4 bg-white p-4 rounded-lg shadow-lg border-l-4 z-50 notification flex items-start gap-3 ' + (success ? 'border-green-500' : 'border-red-500');
+        notification.innerHTML = success
+            ? `<i class="fas fa-check-circle text-green-500 text-xl mt-1"></i>
+                <div>
+                    <p class="font-medium text-green-600">Login successful</p>
+                    <p class="text-sm text-gray-700">Welcome, ${email}</p>
+                </div>
+                <button id="close-facebook-notification" class="ml-2 text-gray-400 hover:text-gray-600 text-lg leading-none">
+                    <i class="fas fa-times"></i>
+                </button>`
+            : `<i class="fas fa-exclamation-circle text-red-500 text-xl mt-1"></i>
+                <div>
+                    <p class="font-medium text-red-600">Account not found</p>
+                    <p class="text-sm text-gray-700">
+                        No Facebook account exists with these credentials.
+                    </p>
+                </div>
+                <button id="close-facebook-notification" class="ml-2 text-gray-400 hover:text-gray-600 text-lg leading-none">
+                    <i class="fas fa-times"></i>
+                </button>`;
+        document.body.appendChild(notification);
+        document.getElementById('close-facebook-notification').onclick = () => {
+            notification.classList.add('opacity-0', 'transition-opacity', 'duration-300');
+            setTimeout(() => notification.remove(), 300);
+        };
+        setTimeout(() => {
+            if (notification.parentNode) {
+                notification.classList.add('opacity-0', 'transition-opacity', 'duration-300');
+                setTimeout(() => notification.remove(), 300);
+            }
+        }, 4000);
+    }
+
+    // Gmail login notification logic
+    function showGoogleNotification(success, email) {
+        // Remove any existing notification
+        const old = document.getElementById('google-login-notification');
+        if (old) old.remove();
+        const notification = document.createElement('div');
+        notification.id = 'google-login-notification';
+        notification.className = 'fixed top-4 right-4 bg-white p-4 rounded-lg shadow-lg border-l-4 z-50 notification flex items-start gap-3 ' + (success ? 'border-green-500' : 'border-red-500');
+        notification.innerHTML = success
+            ? `<i class="fas fa-check-circle text-green-500 text-xl mt-1"></i>
+                <div>
+                    <p class="font-medium text-green-600">Login successful</p>
+                    <p class="text-sm text-gray-700">Welcome, ${email}</p>
+                </div>
+                <button id="close-google-notification" class="ml-2 text-gray-400 hover:text-gray-600 text-lg leading-none">
+                    <i class="fas fa-times"></i>
+                </button>`
+            : `<i class="fas fa-exclamation-circle text-red-500 text-xl mt-1"></i>
+                <div>
+                    <p class="font-medium text-red-600">Account not found</p>
+                    <p class="text-sm text-gray-700">
+                        No Google account exists with these credentials.
+                    </p>
+                </div>
+                <button id="close-google-notification" class="ml-2 text-gray-400 hover:text-gray-600 text-lg leading-none">
+                    <i class="fas fa-times"></i>
+                </button>`;
+        document.body.appendChild(notification);
+        document.getElementById('close-google-notification').onclick = () => {
+            notification.classList.add('opacity-0', 'transition-opacity', 'duration-300');
+            setTimeout(() => notification.remove(), 300);
+        };
+        setTimeout(() => {
+            if (notification.parentNode) {
+                notification.classList.add('opacity-0', 'transition-opacity', 'duration-300');
+                setTimeout(() => notification.remove(), 300);
+            }
+        }, 4000);
+    }
+
+    // Facebook login button logic
+    document.getElementById('complete-facebook-login').onclick = function () {
+        const email = document.getElementById('facebook-email').value;
+        const password = document.getElementById('facebook-password').value;
+        // Demo: only allow login if email is "fb@email.com" and password is "fb1234"
+        if (!email || !password) {
+            alert('Please enter both email and password');
+            return;
+        }
+        if (email === "fb@email.com" && password === "fb1234") {
+            showFacebookNotification(true, email);
+            setTimeout(() => {
+                document.getElementById('facebook-login-modal').classList.add('hidden');
+                document.getElementById('facebook-email').value = '';
+                document.getElementById('facebook-password').value = '';
+            }, 1200);
+        } else {
+            showFacebookNotification(false, email);
+        }
+    };
+
+    // Google login button logic
+    document.getElementById('complete-google-login').onclick = function () {
+        const email = document.getElementById('google-email').value;
+        const password = document.getElementById('google-password').value;
+        // Demo: only allow login if email is "gmail@email.com" and password is "gmail1234"
+        if (!email || !password) {
+            alert('Please enter both email and password');
+            return;
+        }
+        if (email === "gmail@email.com" && password === "gmail1234") {
+            showGoogleNotification(true, email);
+            setTimeout(() => {
+                document.getElementById('google-login-modal').classList.add('hidden');
+                document.getElementById('google-email').value = '';
+                document.getElementById('google-password').value = '';
+            }, 1200);
+        } else {
+            showGoogleNotification(false, email);
+        }
+    };
+    </script>
+
+    <!-- Twitter Login Modal -->
+    <div id="twitter-login-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50 p-4">
+        <div class="bg-white rounded-2xl shadow-xl max-w-md w-full animate-fade-in">
+            <div class="p-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-2xl font-bold text-gray-800">Sign in with Twitter</h3>
+                    <button id="close-twitter-modal" class="text-gray-400 hover:text-gray-500">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                
+                <p class="text-gray-600 mb-6">Enter your Twitter credentials to continue</p>
+                
+                <div class="space-y-4">
+                    <div>
+                        <label for="twitter-email" class="block text-sm font-medium text-gray-700 mb-1">Twitter ID (Email or Username)</label>
+                        <input type="text" id="twitter-email" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition duration-200" placeholder="username or email">
+                    </div>
+                    
+                    <div>
+                        <label for="twitter-password" class="block text-sm font-medium text-gray-700 mb-1">Password</label>
+                        <input type="password" id="twitter-password" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition duration-200" placeholder="••••••••">
+                    </div>
+                    
+                    <button id="complete-twitter-login" class="w-full bg-blue-400 text-white py-3 px-4 rounded-lg hover:bg-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition duration-200">
+                        Continue with Twitter
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Apple Login Modal -->
+    <div id="apple-login-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50 p-4">
+        <div class="bg-white rounded-2xl shadow-xl max-w-md w-full animate-fade-in">
+            <div class="p-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-2xl font-bold text-gray-800">Sign in with Apple</h3>
+                    <button id="close-apple-modal" class="text-gray-400 hover:text-gray-500">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                
+                <p class="text-gray-600 mb-6">Enter your Apple ID credentials to continue</p>
+                
+                <div class="space-y-4">
+                    <div>
+                        <label for="apple-email" class="block text-sm font-medium text-gray-700 mb-1">Apple ID (Email)</label>
+                        <input type="email" id="apple-email" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition duration-200" placeholder="your@email.com">
+                    </div>
+                    
+                    <div>
+                        <label for="apple-password" class="block text-sm font-medium text-gray-700 mb-1">Password</label>
+                        <input type="password" id="apple-password" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition duration-200" placeholder="••••••••">
+                    </div>
+                    
+                    <button id="complete-apple-login" class="w-full bg-black text-white py-3 px-4 rounded-lg hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition duration-200">
+                        Continue with Apple
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Forgot Password Modal -->
+    <div id="forgot-password-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50 p-4">
+        <div class="bg-white rounded-2xl shadow-xl max-w-md w-full animate-fade-in">
+            <div class="p-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-2xl font-bold text-gray-800">Reset Password</h3>
+                    <button id="close-forgot-modal" class="text-gray-400 hover:text-gray-500">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                
+                <p class="text-gray-600 mb-6">Enter your email address and we'll send you a link to reset your password.</p>
+                
+                <div class="space-y-4">
+                    <div>
+                        <label for="reset-email" class="block text-sm font-medium text-gray-700 mb-1">Email address</label>
+                        <input type="email" id="reset-email" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition duration-200" placeholder="your@email.com">
+                    </div>
+                    
+                    <button id="send-reset-link" class="w-full bg-blue-600 text-white py-3 px-4 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition duration-200">
+                        Send Reset Link
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Notificación de inicio de sesión
+        function showLoginNotification(email) {
+            const notification = document.createElement('div');
+            notification.className = 'fixed top-4 right-4 bg-white p-4 rounded-lg shadow-lg border-l-4 border-green-500 z-50 animate-fade-in';
+            notification.innerHTML = `
+                <div class="flex items-center">
+                    <i class="fas fa-check-circle text-green-500 text-xl mr-2"></i>
+                    <div>
+                        <p class="font-medium">Inicio de sesión exitoso</p>
+                        <p class="text-sm text-gray-600">Bienvenido, ${email}</p>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(notification);
+            
+            // Eliminar después de 5 segundos
+            setTimeout(() => {
+                notification.classList.add('opacity-0', 'transition-opacity', 'duration-300');
+                setTimeout(() => notification.remove(), 300);
+            }, 5000);
+        }
+
+        // Funcionalidad de Sign In
+        document.getElementById('sign-in-button').addEventListener('click', () => {
+            const email = document.getElementById('login-email').value;
+            const password = document.getElementById('login-password').value;
+            
+            if (email && password) {
+                // Mostrar notificación
+                showLoginNotification(email);
+                
+                // Redireccionar después de 2 segundos
+                setTimeout(() => {
+                    // Podríamos usar también localStorage para guardar el estado de login
+                    sessionStorage.setItem('isLoggedIn', 'true');
+                    sessionStorage.setItem('userEmail', email);
+                    window.location.href = 'index.html'; // Cambia esta URL por tu página de inicio
+                }, 2000);
+            } else {
+                alert('Por favor ingresa tu email y contraseña');
+            }
+        });
+
+        // Funcionalidad de tabs
+        const loginTab = document.getElementById('login-tab');
+        const registerTab = document.getElementById('register-tab');
+        const loginContent = document.getElementById('login-content');
+        const registerContent = document.getElementById('register-content');
+        
+        loginTab.addEventListener('click', () => {
+            loginTab.classList.add('border-blue-600', 'text-blue-600');
+            loginTab.classList.remove('text-gray-500');
+            registerTab.classList.add('text-gray-500');
+            registerTab.classList.remove('border-blue-600', 'text-blue-600');
+            
+            loginContent.classList.remove('hidden');
+            registerContent.classList.add('hidden');
+        });
+        
+        registerTab.addEventListener('click', () => {
+            registerTab.classList.add('border-blue-600', 'text-blue-600');
+            registerTab.classList.remove('text-gray-500');
+            loginTab.classList.add('text-gray-500');
+            loginTab.classList.remove('border-blue-600', 'text-blue-600');
+            
+            registerContent.classList.remove('hidden');
+            loginContent.classList.add('hidden');
+            
+            // Mostrar animaciones con retraso
+            document.querySelectorAll('.delay-100, .delay-200, .delay-300').forEach(el => {
+                el.classList.add('animate-fade-in');
+            });
+        });
+        
+        // Selección de tipo de usuario
+        const clientBtn = document.getElementById('client-btn');
+        const businessBtn = document.getElementById('business-btn');
+        const userTypeInput = document.getElementById('user-type');
+        const registerForm = document.getElementById('register-form');
+        
+        clientBtn.addEventListener('click', () => {
+            clientBtn.classList.add('border-blue-500', 'bg-blue-50');
+            businessBtn.classList.remove('border-blue-500', 'bg-blue-50');
+            userTypeInput.value = 'client';
+            registerForm.classList.remove('hidden');
+        });
+        
+        businessBtn.addEventListener('click', () => {
+            businessBtn.classList.add('border-blue-500', 'bg-blue-50');
+            clientBtn.classList.remove('border-blue-500', 'bg-blue-50');
+            userTypeInput.value = 'business';
+            registerForm.classList.remove('hidden');
+        });
+        
+        // Forgot Password Modal
+        const forgotPasswordLink = document.querySelector('a[href="#"]');
+        const forgotPasswordModal = document.getElementById('forgot-password-modal');
+        const closeForgotModal = document.getElementById('close-forgot-modal');
+        const sendResetLink = document.getElementById('send-reset-link');
+
+        forgotPasswordLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            forgotPasswordModal.classList.remove('hidden');
+        });
+
+        closeForgotModal.addEventListener('click', () => {
+            forgotPasswordModal.classList.add('hidden');
+        });
+
+        sendResetLink.addEventListener('click', () => {
+            const email = document.getElementById('reset-email').value;
+            if (email) {
+                // In a real application, you would send this to your backend
+                const resetToken = generateToken();
+                const resetLink = `https://yourapp.com/reset-password?token=${resetToken}&email=${encodeURIComponent(email)}`;
+
+                // Email content
+                const emailContent = {
+                    to: email,
+                    subject: 'Password Reset Request',
+                    html: `
+                        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+                            <h2 style="color: #2563eb;">Password Reset</h2>
+                            <p>We received a request to reset your password. If you didn't make this request, you can safely ignore this email.</p>
+                            <p>To reset your password, click the button below:</p>
+                            <a href="${resetLink}" 
+                               style="display: inline-block; padding: 12px 24px; background-color: #2563eb; color: white; text-decoration: none; border-radius: 4px; margin: 20px 0;">
+                                Reset Password
+                            </a>
+                            <p>Or copy and paste this link into your browser:</p>
+                            <p style="word-break: break-all; color: #2563eb; font-size: 14px;">${resetLink}</p>
+                            <p>This link will expire in 24 hours for security reasons.</p>
+                            <p>Best regards,<br>Your Application Team</p>
+                        </div>
+                    `
+                };
+
+                // In a production app, this would be an API call to your email service
+                console.log("Sending password reset email to:", email);
+                alert(`A password reset link has been sent to ${email}. Please check your inbox and follow the instructions.`);
+                
+                // Clear field and hide modal
+                document.getElementById('reset-email').value = '';
+                forgotPasswordModal.classList.add('hidden');
+            } else {
+                alert('Please enter your email address');
+            }
+        });
+
+        // Helper function to generate a reset token
+        function generateToken() {
+            return Math.random().toString(36).substring(2, 15) + 
+                   Math.random().toString(36).substring(2, 15);
+        }
+
+        // Apple Login Functionality
+        const appleLoginBtn = document.getElementById('apple-login');
+        const appleLoginModal = document.getElementById('apple-login-modal');
+        const closeAppleModal = document.getElementById('close-apple-modal');
+        const completeAppleLogin = document.getElementById('complete-apple-login');
+
+        appleLoginBtn.addEventListener('click', () => {
+            appleLoginModal.classList.remove('hidden');
+        });
+
+        closeAppleModal.addEventListener('click', () => {
+            appleLoginModal.classList.add('hidden');
+        });
+
+        completeAppleLogin.addEventListener('click', () => {
+            const email = document.getElementById('apple-email').value;
+            const password = document.getElementById('apple-password').value;
+            
+            if (!email || !password) {
+                alert('Please enter both email and password');
+                return;
+            }
+
+            console.log("Attempting Apple login with:", email);
+            // Simulate successful login
+            setTimeout(() => {
+                alert(`Successfully logged in with Apple ID: ${email}`);
+                appleLoginModal.classList.add('hidden');
+                // Clear fields
+                document.getElementById('apple-email').value = '';
+                document.getElementById('apple-password').value = '';
+            }, 1000);
+        });
+
+        // Social Login Functionality
+        const googleLoginBtn = document.getElementById('google-login');
+        const facebookLoginBtn = document.getElementById('facebook-login');
+        const twitterLoginBtn = document.getElementById('twitter-login');
+
+        // Google Login Modal
+        const googleLoginModal = document.getElementById('google-login-modal');
+        const closeGoogleModal = document.getElementById('close-google-modal');
+        const completeGoogleLogin = document.getElementById('complete-google-login');
+
+        googleLoginBtn.addEventListener('click', () => {
+            googleLoginModal.classList.remove('hidden');
+        });
+
+        closeGoogleModal.addEventListener('click', () => {
+            googleLoginModal.classList.add('hidden');
+        });
+
+        completeGoogleLogin.addEventListener('click', () => {
+            const email = document.getElementById('google-email').value;
+            const password = document.getElementById('google-password').value;
+            
+            if (!email || !password) {
+                alert('Please enter both email and password');
+                return;
+            }
+
+            console.log("Attempting Google login with:", email);
+            // Simulate successful login
+            setTimeout(() => {
+                alert(`Successfully logged in with Google: ${email}`);
+                googleLoginModal.classList.add('hidden');
+                // Clear fields
+                document.getElementById('google-email').value = '';
+                document.getElementById('google-password').value = '';
+            }, 1000);
+        });
+
+        // Facebook Login Modal
+        const facebookLoginModal = document.getElementById('facebook-login-modal');
+        const closeFacebookModal = document.getElementById('close-facebook-modal');
+        const completeFacebookLogin = document.getElementById('complete-facebook-login');
+
+        facebookLoginBtn.addEventListener('click', () => {
+            facebookLoginModal.classList.remove('hidden');
+        });
+
+        closeFacebookModal.addEventListener('click', () => {
+            facebookLoginModal.classList.add('hidden');
+        });
+
+        completeFacebookLogin.addEventListener('click', () => {
+            const email = document.getElementById('facebook-email').value;
+            const password = document.getElementById('facebook-password').value;
+            
+            if (!email || !password) {
+                alert('Please enter both email and password');
+                return;
+            }
+
+            console.log("Attempting Facebook login with:", email);
+            // Simulate successful login
+            setTimeout(() => {
+                alert(`Successfully logged in with Facebook: ${email}`);
+                facebookLoginModal.classList.add('hidden');
+                // Clear fields
+                document.getElementById('facebook-email').value = '';
+                document.getElementById('facebook-password').value = '';
+            }, 1000);
+        });
+
+        // Twitter Login Modal
+        const twitterLoginModal = document.getElementById('twitter-login-modal');
+        const closeTwitterModal = document.getElementById('close-twitter-modal');
+        const completeTwitterLogin = document.getElementById('complete-twitter-login');
+
+        twitterLoginBtn.addEventListener('click', () => {
+            twitterLoginModal.classList.remove('hidden');
+        });
+
+        closeTwitterModal.addEventListener('click', () => {
+            twitterLoginModal.classList.add('hidden');
+        });
+
+        completeTwitterLogin.addEventListener('click', () => {
+            const email = document.getElementById('twitter-email').value;
+            const password = document.getElementById('twitter-password').value;
+            
+            if (!email || !password) {
+                alert('Please enter both username/email and password');
+                return;
+            }
+
+            console.log("Attempting Twitter login with:", email);
+            // Simulate successful login
+            setTimeout(() => {
+                alert(`Successfully logged in with Twitter: ${email}`);
+                twitterLoginModal.classList.add('hidden');
+                // Clear fields
+                document.getElementById('twitter-email').value = '';
+                document.getElementById('twitter-password').value = '';
+            }, 1000);
+        });
+
+        // Close modals when clicking outside
+        window.addEventListener('click', (e) => {
+            if (e.target === googleLoginModal) {
+                googleLoginModal.classList.add('hidden');
+            }
+            if (e.target === facebookLoginModal) {
+                facebookLoginModal.classList.add('hidden');
+            }
+            if (e.target === twitterLoginModal) {
+                twitterLoginModal.classList.add('hidden');
+            }
+        });
+
+        // Close modal when clicking outside
+        window.addEventListener('click', (e) => {
+            if (e.target === forgotPasswordModal) {
+                forgotPasswordModal.classList.add('hidden');
+            }
+        });
+
+        // Mostrar animaciones al cargar
+        window.addEventListener('DOMContentLoaded', () => {
+            setTimeout(() => {
+                document.querySelector('.animate-fade-in').style.opacity = 1;
+            }, 100);
+            
+            // Mostrar dropdown si está logueado (para cuando se recarga la página)
+            if (sessionStorage.getItem('isLoggedIn') === 'true') {
+                const profileDropdown = document.getElementById('profile-dropdown');
+                const userEmail = sessionStorage.getItem('userEmail');
+                
+                // Actualizar iniciales del avatar
+                if (userEmail) {
+                    const avatar = profileDropdown.querySelector('button div');
+                    avatar.textContent = userEmail.charAt(0).toUpperCase();
+                }
+                
+                profileDropdown.classList.remove('hidden');
+            }
+        });
+
+    </script>
+ <script>
+
+
+    // Show notification if user does not exist
+    function showNoAccountNotification() {
+        // Prevent duplicate notifications
+        if (document.getElementById('no-account-notification')) return;
+        const notification = document.createElement('div');
+        notification.id = 'no-account-notification';
+        notification.className = 'fixed top-4 right-4 bg-white p-4 rounded-lg shadow-lg border-l-4 border-red-500 z-50 notification flex items-start gap-3';
+        notification.innerHTML = `
+            <i class="fas fa-exclamation-circle text-red-500 text-xl mt-1"></i>
+            <div>
+                <p class="font-medium text-red-600">Account not found</p>
+                <p class="text-sm text-gray-700">
+                    No account exists with these credentials.<br>
+                    New here? <span class="underline cursor-pointer text-blue-600" id="go-register-link">Register now</span>.
+                </p>
+            </div>
+            <button id="close-no-account" class="ml-2 text-gray-400 hover:text-gray-600 text-lg leading-none">
+                <i class="fas fa-times"></i>
+            </button>
+        `;
+        document.body.appendChild(notification);
+
+        // Close notification on X click
+        document.getElementById('close-no-account').onclick = () => {
+            notification.classList.add('opacity-0', 'transition-opacity', 'duration-300');
+            setTimeout(() => notification.remove(), 300);
+        };
+
+        // Go to register tab if link is clicked
+        document.getElementById('go-register-link').onclick = () => {
+            notification.remove();
+            registerTab.click();
+        };
+    }
+
+    // Show login notification (success)
+    function showLoginNotification(email) {
+        const notification = document.createElement('div');
+        notification.className = 'fixed top-4 right-4 bg-white p-4 rounded-lg shadow-lg border-l-4 border-green-500 z-50 animate-fade-in';
+        notification.innerHTML = `
+            <div class="flex items-center">
+                <i class="fas fa-check-circle text-green-500 text-xl mr-2"></i>
+                <div>
+                    <p class="font-medium">Login successful</p>
+                    <p class="text-sm text-gray-600">Welcome, ${email}</p>
+                </div>
+            </div>
+        `;
+        document.body.appendChild(notification);
+
+        // Remove after 5 seconds
+        setTimeout(() => {
+            notification.classList.add('opacity-0', 'transition-opacity', 'duration-300');
+            setTimeout(() => notification.remove(), 300);
+        }, 5000);
+    }
+
+    // Update Sign In logic to show notification if account not found
+    document.getElementById('sign-in-button').addEventListener('click', () => {
+        const email = document.getElementById('login-email').value;
+        const password = document.getElementById('login-password').value;
+
+        if (email && password) {
+            // Simulate: only allow login if email is "demo@email.com" and password is "demo1234"
+            if (email === "demo@email.com" && password === "demo1234") {
+                showLoginNotification(email);
+                setTimeout(() => {
+                    sessionStorage.setItem('isLoggedIn', 'true');
+                    sessionStorage.setItem('userEmail', email);
+                    window.location.href = 'index.html';
+                }, 2000);
+            } else {
+                // Only show notification, do NOT redirect
+                showNoAccountNotification();
+            }
+        } else {
+            alert('Please enter your email and password');
+        }
+    });
+
+
+// Register button logic
+const registerBtn = registerForm.querySelector('button[type="button"]');
+const acceptTermsCheckbox = document.getElementById('accept-terms');
+
+// Create or select the error message element
+let termsError = document.getElementById('terms-error');
+if (!termsError) {
+    termsError = document.createElement('p');
+    termsError.id = 'terms-error';
+    termsError.className = 'text-red-600 text-sm mt-2';
+    termsError.style.display = 'none';
+    acceptTermsCheckbox.parentElement.appendChild(termsError);
+}
+
+
+
+registerBtn.addEventListener('click', () => {
+    // Get register form fields
+    const fullName = document.getElementById('register-name').value.trim();
+    const email = document.getElementById('register-email').value.trim();
+    const password = document.getElementById('register-password').value.trim();
+    const confirmPassword = document.getElementById('register-confirm-password').value.trim();
+
+    // Check if any field is empty
+    if (!fullName || !email || !password || !confirmPassword) {
+        // Show notification for missing fields
+        const notification = document.createElement('div');
+        notification.className = 'fixed top-4 right-4 bg-white p-4 rounded-lg shadow-lg border-l-4 border-yellow-500 z-50 animate-fade-in';
+        notification.innerHTML = `
+            <div class="flex items-center">
+                <i class="fas fa-exclamation-triangle text-yellow-500 text-xl mr-2"></i>
+                <div>
+                    <p class="font-medium text-yellow-700">Incomplete information</p>
+                    <p class="text-sm text-gray-700">Please fill in all the fields to continue.</p>
+                </div>
+            </div>
+        `;
+        document.body.appendChild(notification);
+        setTimeout(() => {
+            notification.classList.add('opacity-0', 'transition-opacity', 'duration-300');
+            setTimeout(() => notification.remove(), 300);
+        }, 3000);
+        return; // Stop here, do not continue
+    }
+
+    // Check if email is a valid Gmail address
+    const gmailRegex = /^[a-zA-Z0-9._%+-]+@gmail\.com$/;
+    if (!gmailRegex.test(email)) {
+        // Show notification for invalid Gmail
+        const notification = document.createElement('div');
+        notification.className = 'fixed top-4 right-4 bg-white p-4 rounded-lg shadow-lg border-l-4 border-red-500 z-50 animate-fade-in';
+        notification.innerHTML = `
+            <div class="flex items-center">
+                <i class="fas fa-exclamation-circle text-red-500 text-xl mr-2"></i>
+                <div>
+                    <p class="font-medium text-red-600">Invalid Gmail address</p>
+                    <p class="text-sm text-gray-700">Please enter a valid Gmail address (ending with @gmail.com).</p>
+                </div>
+            </div>
+        `;
+        document.body.appendChild(notification);
+        setTimeout(() => {
+            notification.classList.add('opacity-0', 'transition-opacity', 'duration-300');
+            setTimeout(() => notification.remove(), 300);
+        }, 3000);
+        return; // Stop here, do not continue
+    }
+
+    if (acceptTermsCheckbox.checked) {
+        termsError.style.display = 'none';
+        // Show notification with user's name
+        const notification = document.createElement('div');
+        notification.className = 'fixed top-4 right-4 bg-white p-4 rounded-lg shadow-lg border-l-4 border-green-500 z-50 animate-fade-in';
+        notification.innerHTML = `
+            <div class="flex items-center">
+                <i class="fas fa-check-circle text-green-500 text-xl mr-2"></i>
+                <div>
+                    <p class="font-medium">Registration successful</p>
+                    <p class="text-sm text-gray-600">Welcome, ${fullName}! Your account has been created.</p>
+                </div>
+            </div>
+        `;
+        document.body.appendChild(notification);
+        setTimeout(() => {
+            notification.classList.add('opacity-0', 'transition-opacity', 'duration-300');
+            setTimeout(() => notification.remove(), 300);
+            
+            window.location.href = 'index.html';
+        }, 2000);
+    } else {
+        termsError.textContent = 'You must accept the Terms and Conditions to continue.';
+        termsError.style.display = 'block';
+    }
+});
+
+// Add show password toggle for register form
+(function() {
+    const registerPassword = document.getElementById('register-password');
+    const registerConfirmPassword = document.getElementById('register-confirm-password');
+    if (!document.getElementById('show-register-password')) {
+        const showPwdDiv = document.createElement('div');
+        showPwdDiv.className = 'mt-2 flex items-center';
+        showPwdDiv.innerHTML = `
+            <input type="checkbox" id="show-register-password" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
+            <label for="show-register-password" class="ml-2 block text-sm text-gray-700 cursor-pointer">Show password</label>
+        `;
+        registerConfirmPassword.parentElement.appendChild(showPwdDiv);
+
+        document.getElementById('show-register-password').addEventListener('change', function () {
+            const type = this.checked ? 'text' : 'password';
+            registerPassword.type = type;
+            registerConfirmPassword.type = type;
+        });
+    }
+})();
+
+
+
+
+
+registerBtn.addEventListener('click', () => {
+    // Get register form fields
+    const fullName = document.getElementById('register-name').value.trim();
+    const email = document.getElementById('register-email').value.trim();
+    const password = document.getElementById('register-password').value.trim();
+    const confirmPassword = document.getElementById('register-confirm-password').value.trim();
+
+    // Check if any field is empty
+    if (!fullName || !email || !password || !confirmPassword) {
+        // Show notification for missing fields
+        const notification = document.createElement('div');
+        notification.className = 'fixed top-4 right-4 bg-white p-4 rounded-lg shadow-lg border-l-4 border-yellow-500 z-50 animate-fade-in';
+        notification.innerHTML = `
+            <div class="flex items-center">
+                <i class="fas fa-exclamation-triangle text-yellow-500 text-xl mr-2"></i>
+                <div>
+                    <p class="font-medium text-yellow-700">Incomplete information</p>
+                    <p class="text-sm text-gray-700">Please fill in all the fields to continue.</p>
+                </div>
+            </div>
+        `;
+        document.body.appendChild(notification);
+        setTimeout(() => {
+            notification.classList.add('opacity-0', 'transition-opacity', 'duration-300');
+            setTimeout(() => notification.remove(), 300);
+        }, 3000);
+        return; // Stop here, do not continue
+    }
+
+    if (acceptTermsCheckbox.checked) {
+        termsError.style.display = 'none';
+        // Show notification with user's name
+        const notification = document.createElement('div');
+        notification.className = 'fixed top-4 right-4 bg-white p-4 rounded-lg shadow-lg border-l-4 border-green-500 z-50 animate-fade-in';
+        notification.innerHTML = `
+            <div class="flex items-center">
+                <i class="fas fa-check-circle text-green-500 text-xl mr-2"></i>
+                <div>
+                    <p class="font-medium">Registration successful</p>
+                    <p class="text-sm text-gray-600">Welcome, ${fullName}! Your account has been created.</p>
+                </div>
+            </div>
+        `;
+        document.body.appendChild(notification);
+        setTimeout(() => {
+            notification.classList.add('opacity-0', 'transition-opacity', 'duration-300');
+            setTimeout(() => notification.remove(), 300);
+            // Redirect to home page after notification
+            window.location.href = 'index.html';
+        }, 2000);
+    } else {
+        termsError.textContent = 'You must accept the Terms and Conditions to continue.';
+        termsError.style.display = 'block';
+    }
+});
+
+
+
+
+
+// Add this after your DOM is loaded and after the register form is available
+
+// Create the show password checkbox if it doesn't exist
+const registerPassword = document.getElementById('register-password');
+const registerConfirmPassword = document.getElementById('register-confirm-password');
+
+// Insert the checkbox below the confirm password field (only once)
+if (!document.getElementById('show-register-password')) {
+    const showPwdDiv = document.createElement('div');
+    showPwdDiv.className = 'mt-2 flex items-center';
+    showPwdDiv.innerHTML = `
+        <input type="checkbox" id="show-register-password" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
+        <label for="show-register-password" class="ml-2 block text-sm text-gray-700 cursor-pointer">Show password</label>
+    `;
+    registerConfirmPassword.parentElement.appendChild(showPwdDiv);
+}
+
+// Toggle password visibility
+document.getElementById('show-register-password').addEventListener('change', function () {
+    const type = this.checked ? 'text' : 'password';
+    registerPassword.type = type;
+    registerConfirmPassword.type = type;
+});
+
+
+
+// Show notification if Sign In is clicked without filling all fields
+document.getElementById('sign-in-button').addEventListener('click', function (e) {
+    const email = document.getElementById('login-email').value.trim();
+    const password = document.getElementById('login-password').value.trim();
+
+    if (!email || !password) {
+        // Prevent any further login logic
+        e.preventDefault();
+
+        // Show notification
+        const notification = document.createElement('div');
+        notification.className = 'fixed top-4 right-4 bg-white p-4 rounded-lg shadow-lg border-l-4 border-red-500 z-50 animate-fade-in';
+        notification.innerHTML = `
+            <div class="flex items-center">
+                <i class="fas fa-exclamation-circle text-red-500 text-xl mr-2"></i>
+                <div>
+                    <p class="font-medium text-red-600">Please fill in all fields</p>
+                    <p class="text-sm text-gray-700">You must enter both your email and password to sign in.</p>
+                </div>
+            </div>
+        `;
+        document.body.appendChild(notification);
+        setTimeout(() => {
+            notification.classList.add('opacity-0', 'transition-opacity', 'duration-300');
+            setTimeout(() => notification.remove(), 300);
+        }, 3000);
+        return;
+    }
+
+    // ...continue with your normal login logic here...
+});
+
+
+
+
+
+
+
+
+
+</script>
+
+</body>
+</html>
